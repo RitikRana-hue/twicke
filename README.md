@@ -2,99 +2,194 @@
 
 A Blynk-inspired visual GUI builder for IoT display devices. Design beautiful user interfaces for embedded displays without writing code.
 
-## Features
+## 🚀 Features
 
 - **Visual Drag & Drop Interface** - Design UIs like Blynk with intuitive drag-and-drop
 - **Real-time Preview** - See exactly how your UI will look on the target device
-- **Multiple Widget Types** - Labels, buttons, switches, gauges, images, and containers
+- **12+ Widget Types** - Labels, buttons, switches, gauges, charts, images, and containers
 - **Property-Driven Design** - Easily customize colors, sizes, text, and behavior
+- **Multi-Screen Support** - Create complex applications with multiple screens
+- **Layer Management** - Control widget layering with bring-to-front/send-to-back
+- **Image Upload** - Upload local images with base64 encoding for embedded use
 - **Code Generation** - One-click generation of Arduino/ESP32 code
+- **Project Import/Export** - Share designs via JSON files
 - **ESP32-S3 Optimized** - Specifically designed for ESP32-S3 with TFT displays
 
-## Getting Started
+## 🛠️ Getting Started
 
-1. **Install Dependencies**
+### Prerequisites
+- Node.js 16+ and npm
+- Modern web browser
+
+### Installation
+
+1. **Clone Repository**
+   ```bash
+   git clone <repository-url>
+   cd iot-gui-builder
+   ```
+
+2. **Install Dependencies**
    ```bash
    npm install
    ```
 
-2. **Start Development Server**
+3. **Start Development Server**
    ```bash
    npm run dev
    ```
 
-3. **Open in Browser**
+4. **Open in Browser**
    Navigate to `http://localhost:3000`
 
-## How to Use
+### Building for Production
 
-1. **Select Device** - Currently supports ESP32-S3 with 480x320 displays
-2. **Drag Widgets** - Drag widgets from the left panel onto the canvas
-3. **Customize Properties** - Select widgets and modify properties in the right panel
-4. **Generate Code** - Click "Generate Code" to download Arduino code files
-5. **Deploy to Device** - Upload the generated code to your ESP32-S3
+```bash
+npm run build
+```
 
-## Widget Types
+The built files will be in the `dist/` directory, ready for deployment.
 
-- **Label** - Display static or dynamic text
-- **Button** - Interactive buttons with customizable appearance
+## 📱 How to Use
+
+### Basic Workflow
+1. **Design Interface** - Drag widgets from the left panel onto the 480x320 canvas
+2. **Customize Properties** - Select widgets and modify properties in the right panel
+3. **Manage Layers** - Use layer controls to arrange widget depth
+4. **Preview Design** - Click "Preview" to see your design in a device frame
+5. **Generate Code** - Click "Generate Code" to download Arduino code files
+6. **Deploy to Device** - Upload the generated code to your ESP32-S3
+
+### Advanced Features
+- **Multi-Screen Apps**: Create multiple screens and navigate between them
+- **Image Upload**: Upload local images that get embedded as base64 data
+- **Project Sharing**: Export your design as JSON and import others' designs
+- **Undo/Redo**: Full history management for design changes
+
+## 🎨 Widget Library
+
+### Phase 1 (MVP Widgets)
+- **Label** - Static text display
+- **Dynamic Label** - Sensor data with units and formatting
+- **Button** - Interactive buttons with custom styling
 - **Switch** - Toggle switches for on/off controls
-- **Gauge** - Circular progress indicators and meters
-- **Image** - Display images (requires URL)
+- **Checkbox** - Checkbox inputs
+- **Slider** - Range input controls
+
+### Phase 2 (Power Widgets)
+- **Circular Gauge** - Radial progress indicators with customizable ranges
+- **Linear Gauge** - Horizontal/vertical progress bars
+- **Status LED** - Colored indicators with blinking support
 - **Container** - Group and organize other widgets
+- **Image** - Display uploaded images or external URLs
 
-## Code Generation
+### Widget Properties
+Each widget supports extensive customization:
+- **Position & Size** - Precise pixel positioning and dimensions
+- **Colors** - Background, text, and accent colors
+- **Typography** - Font size, weight, and alignment
+- **Behavior** - Enabled/disabled states, visibility
+- **Data Binding** - Connect to sensor values and variables
 
-The generated code includes:
-- `main.ino` - Arduino sketch with TFT_eSPI library
-- `README.md` - Hardware setup and installation instructions
-- `platformio.ini` - PlatformIO configuration
-- `project.json` - Project metadata and widget definitions
+## 🔧 Code Generation
 
-## Hardware Requirements
+The generated Arduino code includes:
 
-- ESP32-S3 development board
-- TFT display (480x320 recommended)
-- TFT_eSPI library configured for your display
-- Optional: SD card for storing images
+### Files Generated
+- **`main.ino`** - Complete Arduino sketch with TFT_eSPI integration
+- **`README.md`** - Hardware setup and installation guide
+- **`platformio.ini`** - PlatformIO configuration for easy building
+- **`project.json`** - Complete project metadata and widget definitions
 
-## Technology Stack
+### Features Included
+- **TFT_eSPI Integration** - Optimized for ESP32-S3 displays
+- **Touch Support** - Touch event handling for interactive widgets
+- **Modular Code** - Clean, readable code structure
+- **Helper Functions** - Utility functions for common operations
+- **Documentation** - Comprehensive comments and setup instructions
 
-- **Frontend**: React + TypeScript
+## 🔌 Hardware Requirements
+
+### Recommended Setup
+- **ESP32-S3** development board (DevKitC-1 or similar)
+- **TFT Display** - 480x320 ILI9341 or compatible
+- **Touch Controller** - XPT2046 or similar (optional)
+- **SD Card** - For storing additional resources (optional)
+
+### Display Configuration
+The generated code is optimized for:
+- **Resolution**: 480x320 pixels
+- **Interface**: SPI
+- **Library**: TFT_eSPI (configured in User_Setup.h)
+
+## 🏗️ Technology Stack
+
+- **Frontend**: React 18 + TypeScript
 - **Styling**: Tailwind CSS
-- **Drag & Drop**: react-dnd
+- **Drag & Drop**: react-dnd with HTML5 backend
 - **Icons**: Lucide React
-- **Build Tool**: Vite
+- **Build Tool**: Vite with optimized production builds
+- **State Management**: React hooks and context
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
-├── components/          # React components
-│   ├── GuiBuilder.tsx   # Main application component
-│   ├── Canvas.tsx       # Design canvas
-│   ├── WidgetLibrary.tsx # Widget palette
-│   ├── WidgetRenderer.tsx # Widget rendering logic
-│   ├── PropertiesPanel.tsx # Property editor
-│   └── Header.tsx       # Top navigation
-├── types/               # TypeScript type definitions
-├── utils/               # Utility functions
-│   ├── codeGenerator.ts # Arduino code generation
-│   └── helpers.ts       # Helper functions
-└── index.css           # Global styles
+├── components/              # React components
+│   ├── EnhancedGuiBuilder.tsx   # Main application
+│   ├── Canvas.tsx               # Design canvas
+│   ├── WidgetLibrary.tsx        # Widget palette
+│   ├── EnhancedWidgetRenderer.tsx # Widget rendering
+│   ├── PropertiesPanel.tsx      # Property editor
+│   ├── EnhancedHeader.tsx       # Navigation & actions
+│   ├── PreviewModal.tsx         # Device preview
+│   └── ScreenManager.tsx        # Multi-screen support
+├── types/                   # TypeScript definitions
+│   ├── index.ts            # Core types
+│   └── widgets.ts          # Widget type system
+├── utils/                   # Utility functions
+│   ├── enhancedCodeGenerator.ts # Arduino code generation
+│   ├── helpers.ts          # Helper functions
+│   ├── historyManager.ts   # Undo/redo functionality
+│   └── templates.ts        # Code templates
+├── data/                    # Static data
+│   └── widgetDefinitions.ts # Widget schemas
+└── index.css               # Global styles
 ```
 
-## Development
+## 🚀 Deployment
 
-- **Add New Widgets**: Extend the `WidgetType` enum and add rendering logic
-- **Customize Code Generation**: Modify `codeGenerator.ts` for different platforms
-- **Styling**: Use Tailwind CSS classes for consistent design
+### Static Hosting
+The built application is a static site that can be deployed to:
+- **Vercel** - `npm run build && vercel --prod`
+- **Netlify** - Drag `dist/` folder to Netlify dashboard
+- **GitHub Pages** - Push `dist/` contents to gh-pages branch
+- **Any Static Host** - Upload `dist/` folder contents
 
-## Inspiration
+### Environment Setup
+No environment variables required - the app runs entirely client-side.
 
-This project is inspired by Blynk's intuitive approach to IoT interface design, bringing that same simplicity to embedded display development.
+## 🤝 Contributing
 
-## License
+### Development Setup
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes and test thoroughly
+4. Commit: `git commit -m 'Add amazing feature'`
+5. Push: `git push origin feature/amazing-feature`
+6. Open a Pull Request
 
-MIT License - feel free to use this project for your IoT applications!# twicke
+### Adding New Widgets
+1. Define widget type in `src/types/widgets.ts`
+2. Add widget definition in `src/data/widgetDefinitions.ts`
+3. Implement rendering in `src/components/EnhancedWidgetRenderer.tsx`
+4. Add code generation in `src/utils/enhancedCodeGenerator.ts`
+
+## 📄 License
+
+MIT License - feel free to use this project for your IoT applications!
+
+## 🙏 Inspiration
+
+This project is inspired by Blynk's intuitive approach to IoT interface design, bringing that same simplicity to embedded display development while adding modern web technologies and enhanced customization capabilities.
 # twicke
