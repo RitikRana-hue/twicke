@@ -80,7 +80,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     ...selectedWidget.properties,
                     src: base64String,
                     alt: file.name
-                }
+                } as any // Type assertion to handle dynamic property access
             });
 
             console.log('📤 Widget updated with new image');
