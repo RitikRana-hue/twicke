@@ -1,4 +1,4 @@
-import { WidgetType, WidgetCategory, BaseWidgetProperties, TextWidgetProperties, InputWidgetProperties, DisplayWidgetProperties, ContainerWidgetProperties, MediaWidgetProperties } from '../types/widgets';
+import { WidgetType, WidgetCategory } from '../types/widgets';
 
 export interface WidgetDefinition {
     type: WidgetType;
@@ -269,6 +269,96 @@ export const PHASE_1_WIDGETS: WidgetDefinition[] = [
             { key: 'borderRadius', label: 'Border Radius', type: 'number', min: 0, max: 20, default: 4, group: 'Style' }
         ],
         codeTemplate: 'drawImage({x}, {y}, {width}, {height}, "{src}");',
+        phase: 1
+    },
+
+    // Startup & Branding
+    {
+        type: 'logo',
+        name: 'Logo',
+        description: 'Brand logo display',
+        category: 'media',
+        icon: 'Image',
+        defaultSize: { width: 120, height: 60 },
+        defaultProperties: {
+            src: '',
+            alt: 'Logo',
+            fit: 'contain',
+            backgroundColor: 'transparent',
+            borderRadius: 0,
+            animation: 'none',
+            uploadType: 'url'
+        },
+        propertySchema: [
+            { key: 'uploadType', label: 'Source Type', type: 'select', options: ['url', 'file'], default: 'url', group: 'Content' },
+            { key: 'src', label: 'Logo URL', type: 'text', default: '', group: 'Content' },
+            { key: 'alt', label: 'Alt Text', type: 'text', default: 'Logo', group: 'Content' },
+            { key: 'fit', label: 'Fit', type: 'select', options: ['contain', 'cover', 'fill'], default: 'contain', group: 'Style' },
+            { key: 'backgroundColor', label: 'Background', type: 'color', default: 'transparent', group: 'Style' },
+            { key: 'animation', label: 'Animation', type: 'select', options: ['none', 'fade-in', 'slide-up', 'zoom-in'], default: 'none', group: 'Animation' }
+        ],
+        codeTemplate: 'drawLogo({x}, {y}, {width}, {height}, "{src}");',
+        phase: 1
+    },
+
+    {
+        type: 'video',
+        name: 'Video',
+        description: 'Video player for startup animations',
+        category: 'media',
+        icon: 'Image',
+        defaultSize: { width: 160, height: 90 },
+        defaultProperties: {
+            src: '',
+            autoplay: true,
+            loop: false,
+            controls: false,
+            muted: true,
+            fit: 'cover'
+        },
+        propertySchema: [
+            { key: 'src', label: 'Video URL', type: 'text', default: '', group: 'Content' },
+            { key: 'autoplay', label: 'Autoplay', type: 'boolean', default: true, group: 'Playback' },
+            { key: 'loop', label: 'Loop', type: 'boolean', default: false, group: 'Playback' },
+            { key: 'controls', label: 'Show Controls', type: 'boolean', default: false, group: 'Playback' },
+            { key: 'muted', label: 'Muted', type: 'boolean', default: true, group: 'Playback' },
+            { key: 'fit', label: 'Fit', type: 'select', options: ['contain', 'cover', 'fill'], default: 'cover', group: 'Style' }
+        ],
+        codeTemplate: 'playVideo({x}, {y}, {width}, {height}, "{src}");',
+        phase: 1
+    },
+
+    // Navigation Buttons
+    {
+        type: 'nav-button',
+        name: 'Navigation Button',
+        description: 'Button that navigates to another screen',
+        category: 'navigation',
+        icon: 'Square',
+        defaultSize: { width: 100, height: 80 },
+        defaultProperties: {
+            text: 'Settings',
+            icon: 'Settings',
+            fontSize: 12,
+            color: '#374151',
+            backgroundColor: '#F9FAFB',
+            borderRadius: 8,
+            targetScreen: '',
+            iconSize: 24,
+            layout: 'vertical'
+        },
+        propertySchema: [
+            { key: 'text', label: 'Text', type: 'text', default: 'Settings', group: 'Content' },
+            { key: 'icon', label: 'Icon', type: 'select', options: ['Settings', 'Wifi', 'Bluetooth', 'Network', 'Home', 'Back', 'Menu'], default: 'Settings', group: 'Content' },
+            { key: 'targetScreen', label: 'Target Screen', type: 'text', default: '', description: 'Screen to navigate to', group: 'Navigation' },
+            { key: 'layout', label: 'Layout', type: 'select', options: ['vertical', 'horizontal'], default: 'vertical', group: 'Style' },
+            { key: 'iconSize', label: 'Icon Size', type: 'number', min: 16, max: 48, default: 24, group: 'Style' },
+            { key: 'fontSize', label: 'Font Size', type: 'number', min: 8, max: 20, default: 12, group: 'Style' },
+            { key: 'color', label: 'Text Color', type: 'color', default: '#374151', group: 'Style' },
+            { key: 'backgroundColor', label: 'Background', type: 'color', default: '#F9FAFB', group: 'Style' },
+            { key: 'borderRadius', label: 'Border Radius', type: 'number', min: 0, max: 20, default: 8, group: 'Style' }
+        ],
+        codeTemplate: 'drawNavButton({x}, {y}, {width}, {height}, "{text}", "{icon}", "{targetScreen}");',
         phase: 1
     }
 ];

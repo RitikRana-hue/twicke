@@ -11,6 +11,7 @@ interface EnhancedWidgetRendererProps {
     onUpdate: (updates: Partial<BaseWidget>) => void;
     onDelete: () => void;
     onLayerChange: (id: string, action: 'front' | 'back' | 'forward' | 'backward') => void;
+    onNavigate?: (targetScreen: string) => void;
     canvasSize: { width: number; height: number };
 }
 
@@ -21,6 +22,7 @@ export const EnhancedWidgetRenderer: React.FC<EnhancedWidgetRendererProps> = ({
     onUpdate,
     onDelete,
     onLayerChange,
+    onNavigate,
     canvasSize
 }) => {
     const [isDragging, setIsDragging] = useState(false);
@@ -105,7 +107,7 @@ export const EnhancedWidgetRenderer: React.FC<EnhancedWidgetRendererProps> = ({
             }}
             onMouseDown={handleMouseDown}
         >
-            <WidgetContent widget={widget} />
+            <WidgetContent widget={widget} onNavigate={onNavigate} />
 
             {isSelected && (
                 <>
@@ -179,7 +181,7 @@ export const EnhancedWidgetRenderer: React.FC<EnhancedWidgetRendererProps> = ({
     );
 };
 
-const WidgetContent: React.FC<{ widget: BaseWidget }> = ({ widget }) => {
+const WidgetContent: React.FC<{ widget: BaseWidget; onNavigate?: (targetScreen: string) => void }> = ({ widget, onNavigate }) => {
     const { type, properties } = widget;
     const definition = getWidgetDefinition(type);
 
@@ -521,6 +523,172 @@ const WidgetContent: React.FC<{ widget: BaseWidget }> = ({ widget }) => {
                         </div>
                     )}
                 </div>
+            );
+
+        case 'logo':
+            const logoSrc = (properties as any).src || '';
+            const logoAlt = (properties as any).alt || 'Logo';
+            const logoAnimation = (properties as any).animation || 'none';
+
+            return (
+                <div style={{
+                    ...baseStyle,
+                    animation: logoAnimation === 'fade-in' ? 'fadeIn 1s ease-in' :
+                        logoAnimation === 'slide-up' ? 'slideUp 0.8s ease-out' :
+                            logoAnimation === 'zoom-in' ? 'zoomIn 0.6s ease-out' : 'none'
+                }}>
+                    {logoSrc && logoSrc.length > 0 ? (
+                        <img
+                            src={logoSrc}
+                            alt={logoAlt}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: props.fit || 'contain',
+                                borderRadius: props.borderRadius || 0
+                            }}
+                        />
+                    ) : (
+                        <div style={{
+                            color: '#6b7280',
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textAlign: 'center',
+                            width: '100%',
+                            height: '100%',
+                            border: '2px dashed #d1d5db',
+                            borderRadius: props.borderRadius || 0
+                        }}>
+                            📷 {logoAlt}
+                        </div>
+                    )}
+                </div>
+            );
+
+        case 'video':
+            const videoSrc = (properties as any).src || '';
+            const videoAutoplay = (properties as any).autoplay || true;
+            const videoLoop = (properties as any).loop || false;
+            const videoControls = (properties as any).controls || false;
+            const videoMuted = (properties as any).muted || true;
+
+            return (
+                <div style={baseStyle}>
+                    {videoSrc && videoSrc.length > 0 ? (
+                        <video
+                            src={videoSrc}
+                            autoPlay={videoAutoplay}
+                            loop={videoLoop}
+                            controls={videoControls}
+                            muted={videoMuted}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: props.fit || 'cover',
+                                borderRadius: props.borderRadius || 0
+                            }}
+                        />
+                    ) : (
+                        <div style={{
+                            color: '#6b7280',
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textAlign: 'center',
+                            width: '100%',
+                            height: '100%',
+                            border: '2px dashed #d1d5db',
+                            borderRadius: props.borderRadius || 0,
+                            backgroundColor: '#f3f4f6'
+                        }}>
+                            🎬 Video Player
+                        </div>
+                    )}
+                </div>
+            );
+
+        case 'nav-button':
+            const navText = props.text || 'Settings';
+            const navIcon = props.icon || 'Settings';
+            const navLayout = props.layout || 'vertical';
+            const navIconSize = props.iconSize || 24;
+            const navTargetScreen = props.targetScreen || '';
+
+            // Icon mapping
+            const iconMap: { [key: string]: string } = {
+                'Settings': '⚙️',
+                'Wifi': '📶',
+                'Bluetooth': '🔵',
+                'Network': '🌐',
+                'Home': '🏠',
+                'Back': '⬅️',
+                'Menu': '☰'
+            };
+
+            const iconDisplay = iconMap[navIcon] || '⚙️';
+
+            return (
+                <button
+                    style={{
+                        ...baseStyle,
+                        flexDirection: navLayout === 'horizontal' ? 'row' : 'column',
+                        gap: '4px',
+                        cursor: 'pointer',
+                        border: `1px solid ${props.borderColor || '#e5e7eb'}`,
+                        transition: 'all 0.2s ease',
+                        fontWeight: '500'
+                    }}
+                    title={navTargetScreen ? `Navigate to ${navTargetScreen}` : navText}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (navTargetScreen && onNavigate) {
+                            console.log('🧭 Navigation clicked:', navTargetScreen);
+
+                            // Visual feedback
+                            e.currentTarget.style.transform = 'scale(0.95)';
+                            e.currentTarget.style.backgroundColor = '#e5e7eb';
+
+                            setTimeout(() => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.backgroundColor = props.backgroundColor || '#F9FAFB';
+                            }, 150);
+
+                            onNavigate(navTargetScreen);
+                        } else if (!navTargetScreen) {
+                            alert('No target screen specified for this button. Please set the "Target Screen" property.');
+                        }
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#f3f4f6';
+                        e.currentTarget.style.transform = 'scale(1.02)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = props.backgroundColor || '#F9FAFB';
+                        e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                >
+                    <div style={{ fontSize: `${navIconSize}px` }}>
+                        {iconDisplay}
+                    </div>
+                    <div style={{ fontSize: `${props.fontSize || 12}px` }}>
+                        {navText}
+                    </div>
+                    {navTargetScreen && (
+                        <div style={{
+                            fontSize: '8px',
+                            color: '#9ca3af',
+                            marginTop: '2px'
+                        }}>
+                            → {navTargetScreen}
+                        </div>
+                    )}
+                </button>
             );
 
         default:

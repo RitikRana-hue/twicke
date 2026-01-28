@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Plus, Copy, Trash2, Monitor, MoreHorizontal } from 'lucide-react';
 import { Screen } from '../types';
+import { TemplateSelector } from './TemplateSelector';
+import { ScreenTemplate } from '../utils/screenTemplates';
 
 interface ScreenManagerProps {
     screens: Screen[];
     currentScreenId: string;
     onSwitchScreen: (screenId: string) => void;
-    onAddScreen: (name: string) => void;
+    onAddScreen: (name: string, template?: ScreenTemplate) => void;
     onDuplicateScreen: (screenId: string) => void;
     onDeleteScreen: (screenId: string) => void;
 }
@@ -20,6 +22,7 @@ export const ScreenManager: React.FC<ScreenManagerProps> = ({
     onDeleteScreen
 }) => {
     const [showAddDialog, setShowAddDialog] = useState(false);
+    const [showTemplateSelector, setShowTemplateSelector] = useState(false);
     const [newScreenName, setNewScreenName] = useState('');
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
@@ -31,6 +34,10 @@ export const ScreenManager: React.FC<ScreenManagerProps> = ({
         }
     };
 
+    const handleCreateFromTemplate = (name: string, template?: ScreenTemplate) => {
+        onAddScreen(name, template);
+        setShowTemplateSelector(false);
+    };
     const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
             handleAddScreen();
@@ -109,13 +116,23 @@ export const ScreenManager: React.FC<ScreenManagerProps> = ({
 
                 {/* Add Screen Button */}
                 {!showAddDialog ? (
-                    <button
-                        onClick={() => setShowAddDialog(true)}
-                        className="flex items-center space-x-1 px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
-                    >
-                        <Plus size={14} />
-                        <span>Add Screen</span>
-                    </button>
+                    <div className="flex items-center space-x-1">
+                        <button
+                            onClick={() => setShowAddDialog(true)}
+                            className="flex items-center space-x-1 px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
+                        >
+                            <Plus size={14} />
+                            <span>Add Screen</span>
+                        </button>
+                        <button
+                            onClick={() => setShowTemplateSelector(true)}
+                            className="flex items-center space-x-1 px-2 py-1.5 text-sm text-primary-600 hover:bg-primary-50 rounded-md transition-colors"
+                            title="Create from template"
+                        >
+                            <Monitor size={14} />
+                            <span>Templates</span>
+                        </button>
+                    </div>
                 ) : (
                     <div className="flex items-center space-x-2">
                         <input
@@ -154,6 +171,12 @@ export const ScreenManager: React.FC<ScreenManagerProps> = ({
                     onClick={() => setActiveDropdown(null)}
                 />
             )}
+            {/* Template Selector Modal */}
+            <TemplateSelector
+                isOpen={showTemplateSelector}
+                onClose={() => setShowTemplateSelector(false)}
+                onCreateScreen={handleCreateFromTemplate}
+            />
         </div>
     );
 };

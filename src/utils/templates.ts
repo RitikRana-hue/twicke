@@ -1,4 +1,4 @@
-import { Template, Widget } from '../types';
+import { Template, WidgetCategory } from '../types';
 import { generateId } from './helpers';
 
 export const PROJECT_TEMPLATES: Template[] = [
@@ -30,6 +30,7 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'label',
                         position: { x: 20, y: 20 },
                         size: { width: 200, height: 30 },
+                        category: 'text-display' as WidgetCategory,
                         properties: {
                             text: 'IoT Dashboard',
                             fontSize: 18,
@@ -45,6 +46,7 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'gauge',
                         position: { x: 50, y: 80 },
                         size: { width: 120, height: 120 },
+                        category: 'data-visualization' as WidgetCategory,
                         properties: {
                             value: 23,
                             min: 0,
@@ -63,6 +65,7 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'gauge',
                         position: { x: 250, y: 80 },
                         size: { width: 120, height: 120 },
+                        category: 'data-visualization' as WidgetCategory,
                         properties: {
                             value: 65,
                             min: 0,
@@ -81,6 +84,7 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'label',
                         position: { x: 80, y: 210 },
                         size: { width: 60, height: 20 },
+                        category: 'text-display' as WidgetCategory,
                         properties: {
                             text: 'Temperature',
                             fontSize: 12,
@@ -92,13 +96,14 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'label',
                         position: { x: 280, y: 210 },
                         size: { width: 60, height: 20 },
+                        category: 'text-display' as WidgetCategory,
                         properties: {
                             text: 'Humidity',
                             fontSize: 12,
                             color: '#CCCCCC'
                         }
                     }
-                ] as Widget[],
+                ] as any[],
                 isStartup: true,
                 backgroundColor: '#1F2937'
             }
@@ -118,6 +123,7 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'label',
                         position: { x: 20, y: 20 },
                         size: { width: 150, height: 30 },
+                        category: 'text-display' as WidgetCategory,
                         properties: {
                             text: 'Device Control',
                             fontSize: 16,
@@ -129,6 +135,7 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'switch',
                         position: { x: 50, y: 80 },
                         size: { width: 80, height: 40 },
+                        category: 'input-control' as WidgetCategory,
                         properties: {
                             value: 0,
                             color: '#0EA5E9'
@@ -152,6 +159,7 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'button',
                         position: { x: 200, y: 80 },
                         size: { width: 100, height: 40 },
+                        category: 'input-control' as WidgetCategory,
                         properties: {
                             text: 'Reset',
                             color: '#FFFFFF',
@@ -176,13 +184,14 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'label',
                         position: { x: 50, y: 140 },
                         size: { width: 100, height: 25 },
+                        category: 'text-display' as WidgetCategory,
                         properties: {
                             text: 'Main Power',
                             fontSize: 12,
                             color: '#CCCCCC'
                         }
                     }
-                ] as Widget[],
+                ] as any[],
                 isStartup: true,
                 backgroundColor: '#111827'
             }
@@ -202,6 +211,7 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'gauge',
                         position: { x: 50, y: 50 },
                         size: { width: 150, height: 150 },
+                        category: 'data-visualization' as WidgetCategory,
                         properties: {
                             value: 85,
                             min: 0,
@@ -220,6 +230,7 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'label',
                         position: { x: 100, y: 210 },
                         size: { width: 50, height: 20 },
+                        category: 'text-display' as WidgetCategory,
                         properties: {
                             text: 'Battery',
                             fontSize: 12,
@@ -231,6 +242,7 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'label',
                         position: { x: 250, y: 80 },
                         size: { width: 120, height: 30 },
+                        category: 'text-display' as WidgetCategory,
                         properties: {
                             text: '245 km',
                             fontSize: 20,
@@ -247,13 +259,14 @@ export const PROJECT_TEMPLATES: Template[] = [
                         type: 'label',
                         position: { x: 250, y: 110 },
                         size: { width: 80, height: 20 },
+                        category: 'text-display' as WidgetCategory,
                         properties: {
                             text: 'Range',
                             fontSize: 12,
                             color: '#CCCCCC'
                         }
                     }
-                ] as Widget[],
+                ] as any[],
                 isStartup: true,
                 backgroundColor: '#0F172A'
             }

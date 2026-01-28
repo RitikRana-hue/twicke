@@ -43,9 +43,10 @@ export type WidgetType =
     | 'slider' | 'vertical-slider' | 'knob'
     | 'text-input' | 'numeric-stepper'
     | 'circular-gauge' | 'linear-gauge' | 'progress-bar'
-    | 'image' | 'icon' | 'svg-icon'
+    | 'image' | 'icon' | 'svg-icon' | 'logo' | 'video'
     | 'container' | 'card' | 'panel'
     | 'line-chart' | 'bar-chart' | 'pie-chart'
+    | 'nav-button'
 
     // Phase 2 - Power Features
     | 'tab-container' | 'accordion' | 'modal'

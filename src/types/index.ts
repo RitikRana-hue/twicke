@@ -4,6 +4,10 @@ export * from './widgets';
 // Legacy exports for existing components
 export type { BaseWidget as Widget } from './widgets';
 export type { BaseWidgetProperties as WidgetProperties } from './widgets';
+export type { BaseWidget } from './widgets';
+
+// Direct import to resolve type issues
+import type { BaseWidget } from './widgets';
 
 // Layer 3: Events & Actions
 export interface WidgetEvent {
@@ -61,6 +65,15 @@ export interface DeviceConfig {
     width: number;
     height: number;
     pixelDensity: number;
+    dpi?: number; // Dots per inch for unit conversion
+}
+
+export type SizeUnit = 'px' | 'mm' | 'inch';
+
+export interface ScreenDimensions {
+    width: number;
+    height: number;
+    unit: SizeUnit;
 }
 
 export interface Project {

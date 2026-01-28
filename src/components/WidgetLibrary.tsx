@@ -4,10 +4,10 @@ import {
     Type, Square, ToggleLeft, Gauge, Image, Box, Activity, CheckSquare,
     Circle, TrendingUp, BarChart3, Minus, ChevronDown, ChevronRight
 } from 'lucide-react';
-import { WidgetType, WidgetCategory } from '../types/widgets';
-import { ALL_WIDGETS, getWidgetsByCategory, WidgetDefinition } from '../data/widgetDefinitions';
+import { WidgetCategory } from '../types/widgets';
+import { getWidgetsByCategory, WidgetDefinition } from '../data/widgetDefinitions';
 
-const ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
+const ICON_MAP: Record<string, React.ComponentType<any>> = {
     'Type': Type,
     'Square': Square,
     'ToggleLeft': ToggleLeft,
@@ -26,7 +26,7 @@ const CATEGORY_LABELS: Record<WidgetCategory, string> = {
     'text-display': 'Text & Display',
     'input-control': 'Input & Control',
     'data-visualization': 'Data Visualization',
-    'media': 'Media',
+    'media': 'Media & Branding',
     'containers': 'Containers',
     'navigation': 'Navigation',
     'status-feedback': 'Status & Feedback',
@@ -36,7 +36,7 @@ const CATEGORY_LABELS: Record<WidgetCategory, string> = {
 
 export const WidgetLibrary: React.FC = () => {
     const [expandedCategories, setExpandedCategories] = useState<Set<WidgetCategory>>(
-        new Set(['text-display', 'input-control', 'data-visualization'])
+        new Set(['text-display', 'input-control', 'media', 'navigation'])
     );
 
     const toggleCategory = (category: WidgetCategory) => {

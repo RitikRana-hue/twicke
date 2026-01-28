@@ -189,7 +189,4 @@ No environment variables required - the app runs entirely client-side.
 
 MIT License - feel free to use this project for your IoT applications!
 
-## 🙏 Inspiration
-
 This project is inspired by Blynk's intuitive approach to IoT interface design, bringing that same simplicity to embedded display development while adding modern web technologies and enhanced customization capabilities.
-# twicke

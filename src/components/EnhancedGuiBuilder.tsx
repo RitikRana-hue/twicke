@@ -2,19 +2,21 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { BaseWidget, DeviceConfig, Screen, Project } from '../types';
 import { getWidgetDefinition } from '../data/widgetDefinitions';
 import { WidgetLibrary } from './WidgetLibrary';
-import { Canvas } from './Canvas';
+import { FullAreaCanvas } from './FullAreaCanvas';
 import { PropertiesPanel } from './PropertiesPanel';
 import { EnhancedHeader } from './EnhancedHeader';
 import { ScreenManager } from './ScreenManager';
-import { generateProjectFiles } from '../utils/enhancedCodeGenerator';
+import { ScreenSizeBar } from './ScreenSizeBar';
 import { generateId } from '../utils/helpers';
 import { HistoryManager } from '../utils/historyManager';
+import { ScreenTemplate, createScreenFromTemplate } from '../utils/screenTemplates';
 
 const DEFAULT_DEVICE: DeviceConfig = {
     name: 'ESP32-S3 Display',
     width: 480,
     height: 320,
-    pixelDensity: 1
+    pixelDensity: 1,
+    dpi: 96
 };
 
 const DEFAULT_SCREEN: Screen = {
@@ -207,23 +209,40 @@ export const EnhancedGuiBuilder: React.FC = () => {
         saveToHistory(`${action} widget`);
     }, [currentScreen.widgets, updateWidget, saveToHistory]);
 
-    const addScreen = useCallback((name: string) => {
-        const newScreen: Screen = {
-            id: generateId(),
-            name,
-            widgets: [],
-            backgroundColor: '#000000'
-        };
+    const addScreen = useCallback((name: string, template?: ScreenTemplate) => {
+        console.log('🏗️ Adding screen:', name, template ? `with template: ${template.name}` : 'blank');
 
-        setProject(prev => ({
-            ...prev,
-            screens: [...prev.screens, newScreen],
-            currentScreenId: newScreen.id,
-            updatedAt: new Date()
-        }));
+        let newScreen: Screen;
+
+        if (template) {
+            // Create from template
+            console.log('📋 Creating from template with', template.widgets.length, 'widgets');
+            newScreen = createScreenFromTemplate(template, name);
+            console.log('✅ Created screen from template:', newScreen.name, 'with', newScreen.widgets.length, 'widgets');
+        } else {
+            // Create blank screen
+            console.log('📄 Creating blank screen');
+            newScreen = {
+                id: generateId(),
+                name,
+                widgets: [],
+                backgroundColor: '#000000'
+            };
+        }
+
+        setProject(prev => {
+            const updatedProject = {
+                ...prev,
+                screens: [...prev.screens, newScreen],
+                currentScreenId: newScreen.id,
+                updatedAt: new Date()
+            };
+            console.log('📊 Project updated. Total screens:', updatedProject.screens.length);
+            return updatedProject;
+        });
 
         setSelectedWidget(null);
-        saveToHistory(`Add screen: ${name}`);
+        saveToHistory(`Add screen: ${name}${template ? ' (from template)' : ''}`);
     }, [saveToHistory]);
 
     const switchScreen = useCallback((screenId: string) => {
@@ -286,6 +305,59 @@ export const EnhancedGuiBuilder: React.FC = () => {
         historyManager.current.addState(importedProject.screens, importedProject.currentScreenId, 'Project imported');
     }, []);
 
+    const handleDeviceUpdate = useCallback((newDevice: DeviceConfig) => {
+        setProject(prev => ({
+            ...prev,
+            device: newDevice,
+            updatedAt: new Date()
+        }));
+        saveToHistory('Update screen size');
+    }, [saveToHistory]);
+
+    const handleNavigateToScreen = useCallback((targetScreenName: string) => {
+        console.log('🧭 Attempting to navigate to:', targetScreenName);
+        console.log('📋 Available screens:', project.screens.map(s => `"${s.name}"`).join(', '));
+
+        // Find screen by name (case-insensitive)
+        const targetScreen = project.screens.find(screen =>
+            screen.name.toLowerCase().trim() === targetScreenName.toLowerCase().trim()
+        );
+
+        if (targetScreen) {
+            console.log('✅ Found target screen:', targetScreen.name, 'ID:', targetScreen.id);
+            setProject(prev => ({
+                ...prev,
+                currentScreenId: targetScreen.id,
+                updatedAt: new Date()
+            }));
+            setSelectedWidget(null);
+        } else {
+            console.warn('❌ Screen not found:', `"${targetScreenName}"`);
+            console.log('🔍 Exact match search failed. Available screens:');
+            project.screens.forEach((screen, index) => {
+                console.log(`  ${index + 1}. "${screen.name}" (ID: ${screen.id})`);
+            });
+
+            // Try partial match
+            const partialMatch = project.screens.find(screen =>
+                screen.name.toLowerCase().includes(targetScreenName.toLowerCase()) ||
+                targetScreenName.toLowerCase().includes(screen.name.toLowerCase())
+            );
+
+            if (partialMatch) {
+                console.log('🎯 Found partial match:', partialMatch.name);
+                setProject(prev => ({
+                    ...prev,
+                    currentScreenId: partialMatch.id,
+                    updatedAt: new Date()
+                }));
+                setSelectedWidget(null);
+            } else {
+                // Show a user-friendly message
+                alert(`Screen "${targetScreenName}" not found.\n\nAvailable screens:\n${project.screens.map((s, i) => `${i + 1}. ${s.name}`).join('\n')}`);
+            }
+        }
+    }, [project.screens]);
     return (
         <div className="h-full flex flex-col overflow-hidden">
             <EnhancedHeader
@@ -310,7 +382,12 @@ export const EnhancedGuiBuilder: React.FC = () => {
                         onDeleteScreen={deleteScreen}
                     />
 
-                    <Canvas
+                    <ScreenSizeBar
+                        device={project.device}
+                        onDeviceUpdate={handleDeviceUpdate}
+                    />
+
+                    <FullAreaCanvas
                         widgets={currentScreen.widgets}
                         device={project.device}
                         selectedWidget={selectedWidget}
@@ -319,6 +396,7 @@ export const EnhancedGuiBuilder: React.FC = () => {
                         onWidgetUpdate={updateWidget}
                         onWidgetDelete={deleteWidget}
                         onLayerChange={handleLayerChange}
+                        onNavigate={handleNavigateToScreen}
                         backgroundColor={currentScreen.backgroundColor}
                     />
                 </div>
